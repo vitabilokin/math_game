@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Тригонометричний квест · znohub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alumni+Sans:wght@700;800;900&family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#0C00FF;--bg:#DCE8FC;--surface:#FFFFFF;--soft:#EAF1FD;--ink:#0A0A1F;--muted:#5B6385;--line:#C9D7F5;--accent:#0C00FF;--good:#0C00FF;--bad:#E0244A;
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#060A2E;--surface:#111745;--soft:#1A2160;--ink:#F2F4FF;--muted:#A7AEDB;--line:#2A3380;--accent:#8C86FF;--good:#8C86FF;--bad:#FF5C7A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#060A2E;--surface:#111745;--soft:#1A2160;--ink:#F2F4FF;--muted:#A7AEDB;--line:#2A3380;--accent:#8C86FF;--good:#8C86FF;--bad:#FF5C7A;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Google Sans","Product Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.app{max-width:480px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding:14px 16px 28px;gap:16px}
+.top{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:999px;padding:10px 18px;color:var(--ink)}
+.logo{height:40px;width:auto;display:block;margin:-8px 0 -8px -14px}
+.count{color:var(--accent);font-weight:500;font-variant-numeric:tabular-nums}
+.display{font-family:"Alumni Sans","Arial Narrow",Impact,sans-serif;font-weight:900;line-height:.9;text-transform:uppercase}
+.col{display:flex;flex-direction:column;gap:16px}
+.hero{background:var(--brand);color:#fff;border-radius:28px;padding:26px 22px 24px;text-align:center;position:relative;overflow:hidden}
+.hero h1{font-size:clamp(60px,18vw,92px);margin:0}
+.hero p{margin:12px auto 0;font-size:17px;line-height:1.45;max-width:32ch;position:relative}
+.hero svg.wave{position:absolute;left:0;right:0;bottom:-6px;width:100%;height:70px;opacity:.25}
+.panel{background:var(--surface);border-radius:22px;padding:18px}
+.panel h3{margin:0 0 10px;font-size:16px}
+.panel p{margin:0;line-height:1.45;font-size:15.5px}
+.cta{background:var(--brand);color:#fff;border:0;border-radius:999px;padding:17px 22px;font-size:18px;font-weight:700;width:100%}
+.cta:disabled{opacity:.4;cursor:default}
+.note{color:var(--muted);font-size:13.5px;text-align:center;margin:0;line-height:1.4}
+.bar{height:6px;border-radius:9px;background:var(--surface);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--brand);width:0;transition:width .3s}
+.round{display:inline-block;align-self:flex-start;background:var(--brand);color:#fff;border-radius:999px;padding:6px 14px;font-weight:700;font-size:14px}
+.prompt{font-weight:700;font-size:17px;margin:0;line-height:1.4}
+.graph{background:#0C00FF;border-radius:22px;overflow:hidden;line-height:0}
+.graph svg{width:100%;height:auto;display:block}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;gap:12px;align-items:center;text-align:left;background:var(--surface);border:2px solid transparent;border-radius:16px;padding:12px 14px;font-size:16.5px}
+.opt .l{flex:none;min-width:30px;height:30px;padding:0 6px;border-radius:9px;display:grid;place-items:center;background:var(--soft);font-weight:700;font-size:15px}
+.opt.right{border-color:var(--good)}.opt.right .l{background:var(--brand);color:#fff}
+.opt.wrong{border-color:var(--bad)}.opt.wrong .l{background:var(--bad);color:#fff}
+.opts.locked .opt:not(.right):not(.wrong){opacity:.45}
+.fb{border-radius:14px;padding:12px 14px;font-size:15px;line-height:1.45;background:var(--surface)}
+.fb b{display:block;margin-bottom:2px}
+.fb.ok{border-left:4px solid var(--good)}.fb.no{border-left:4px solid var(--bad)}
+.pair{background:var(--surface);border-radius:18px;padding:12px 14px}
+.pair .pq{margin:0 0 8px;font-size:16px}
+.pair .pq b{color:var(--accent);margin-right:6px}
+.letters{display:flex;gap:6px}
+.letters button{flex:1;border:2px solid var(--line);background:var(--soft);border-radius:12px;padding:9px 0;font-weight:700}
+.letters button.sel,.letters button.right{background:var(--brand);color:#fff;border-color:var(--brand)}
+.letters button.wrong{border-color:var(--bad);background:var(--bad);color:#fff}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:15.5px}
+.legend b{color:var(--accent);margin-right:4px}
+.circle{position:relative;width:min(300px,80vw);aspect-ratio:1;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;border-radius:50%;overflow:hidden;background:var(--surface);border:3px solid var(--brand)}
+.circle button{border:0;background:transparent;font-family:"Alumni Sans",Impact,sans-serif;font-weight:900;font-size:44px;color:var(--accent);transition:background .15s}
+.circle button:hover{background:var(--soft)}
+.circle button.right{background:var(--brand);color:#fff}
+.circle button.wrong{background:var(--bad);color:#fff}
+.circle::before,.circle::after{content:"";position:absolute;background:var(--brand);pointer-events:none}
+.circle::before{left:50%;top:0;bottom:0;width:2px;transform:translateX(-1px)}
+.circle::after{top:50%;left:0;right:0;height:2px;transform:translateY(-1px)}
+.axes-hint{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);max-width:300px;margin:0 auto;width:80vw}
+.result{text-align:center}
+.result .big{font-size:110px;margin:0}.result .big small{font-size:.42em;opacity:.75}
+.result h2{font-size:40px;margin:6px 0 10px}
+.result p{margin:0 auto;max-width:32ch;font-size:16px;line-height:1.45}
+.cheat{overflow-x:auto}
+.cheat table{border-collapse:collapse;width:100%;font-size:13.5px}
+.cheat th,.cheat td{padding:8px 5px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cheat th{color:var(--muted);font-weight:500;font-size:13px}
+.cheat td:first-child{font-weight:700;color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top"><span><svg class="logo" role="img" aria-label="znohub" viewBox="0 0 1080 500" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M209.489 342.271H98L154.306 242.18H98V208.021H209.489L153.183 308.112H209.489V342.271Z" fill="currentColor"/><path d="M262.55 342.271H228.466V207.77H236.706L247.942 220.831C253.436 215.807 259.636 211.956 266.545 209.277C273.536 206.514 280.819 205.133 288.393 205.133C296.55 205.133 304.249 206.723 311.49 209.905C318.731 213.002 325.057 217.314 330.467 222.84C335.877 228.282 340.122 234.687 343.201 242.054C346.364 249.338 347.946 257.124 347.946 265.413V342.271H313.862V265.413C313.862 261.897 313.196 258.59 311.865 255.492C310.533 252.31 308.702 249.548 306.371 247.203C304.041 244.859 301.336 243.017 298.256 241.678C295.177 240.338 291.889 239.668 288.393 239.668C284.814 239.668 281.443 240.338 278.28 241.678C275.118 243.017 272.371 244.859 270.04 247.203C267.71 249.548 265.879 252.31 264.547 255.492C263.215 258.59 262.55 261.897 262.55 265.413V342.271Z" fill="currentColor"/><path d="M536.858 341.989H502.793V155H536.858V214.082C540.934 211.001 545.135 208.836 549.461 207.587C553.787 206.254 558.196 205.588 562.688 205.588C570.923 205.588 578.66 207.17 585.897 210.335C593.134 213.416 599.415 217.704 604.739 223.2C610.146 228.613 614.389 234.983 617.467 242.311C620.628 249.556 622.208 257.3 622.208 265.544V341.989H587.894V265.544H588.143C588.143 262.047 587.478 258.758 586.147 255.677C584.816 252.512 582.986 249.764 580.656 247.433C578.327 245.101 575.624 243.269 572.546 241.937C569.468 240.604 566.182 239.938 562.688 239.938C559.111 239.938 555.742 240.604 552.581 241.937C549.419 243.269 546.674 245.101 544.345 247.433C542.016 249.764 540.186 252.512 538.855 255.677C537.524 258.758 536.858 262.047 536.858 265.544V341.989Z" fill="currentColor"/><path d="M743.745 326.375C741 328.873 738.047 331.246 734.886 333.495C731.808 335.66 728.563 337.575 725.153 339.241C721.742 340.823 718.207 342.072 714.546 342.988C710.969 343.987 707.309 344.487 703.566 344.487C695.33 344.487 687.594 343.029 680.356 340.115C673.119 337.2 666.755 333.078 661.265 327.749C655.858 322.336 651.574 315.799 648.412 308.138C645.335 300.394 643.796 291.734 643.796 282.157V208.211H677.736V282.157C677.736 286.654 678.401 290.693 679.732 294.273C681.147 297.771 683.018 300.727 685.348 303.142C687.677 305.557 690.38 307.389 693.458 308.638C696.62 309.887 699.989 310.512 703.566 310.512C707.06 310.512 710.345 309.72 713.423 308.138C716.584 306.473 719.33 304.308 721.659 301.643C723.988 298.978 725.818 295.98 727.149 292.65C728.48 289.235 729.146 285.738 729.146 282.157V208.211H763.211V341.989H754.975L743.745 326.375Z" fill="currentColor"/><path d="M923.055 273.913C923.055 284.406 921.267 293.982 917.69 302.642C914.113 311.303 909.246 318.756 903.091 325.001C896.935 331.163 889.697 335.951 881.379 339.365C873.143 342.78 864.284 344.487 854.8 344.487C845.4 344.487 836.541 342.738 828.222 339.241C819.986 335.743 812.749 330.872 806.51 324.626C800.354 318.381 795.488 310.97 791.911 302.392C788.334 293.732 786.545 284.239 786.545 273.913V155H820.735V217.454C822.565 215.123 824.77 213.041 827.348 211.209C830.01 209.377 832.839 207.878 835.834 206.712C838.911 205.546 842.073 204.672 845.317 204.089C848.561 203.423 851.722 203.09 854.8 203.09C864.284 203.09 873.143 204.88 881.379 208.461C889.697 211.958 896.935 216.872 903.091 223.2C909.246 229.529 914.113 237.023 917.69 245.684C921.267 254.261 923.055 263.671 923.055 273.913ZM888.741 273.913C888.741 268.75 887.826 263.962 885.996 259.549C884.249 255.052 881.836 251.18 878.758 247.932C875.68 244.685 872.062 242.145 867.902 240.313C863.826 238.481 859.459 237.565 854.8 237.565C850.142 237.565 845.733 238.606 841.573 240.687C837.497 242.686 833.92 245.392 830.842 248.807C827.764 252.137 825.352 256.01 823.605 260.423C821.858 264.753 820.985 269.25 820.985 273.913C820.985 279.076 821.858 283.864 823.605 288.278C825.352 292.691 827.764 296.522 830.842 299.769C833.92 303.017 837.497 305.598 841.573 307.514C845.733 309.346 850.142 310.262 854.8 310.262C859.459 310.262 863.826 309.346 867.902 307.514C872.062 305.598 875.68 303.017 878.758 299.769C881.836 296.522 884.249 292.691 885.996 288.278C887.826 283.864 888.741 279.076 888.741 273.913Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M425.732 338.583C461.769 338.583 490.983 309.368 490.983 273.332C490.983 237.296 461.769 208.081 425.732 208.081C389.694 208.081 360.48 237.296 360.48 273.332C360.48 309.368 389.694 338.583 425.732 338.583ZM423.259 237.994C419.411 234.658 413.588 235.074 410.253 238.922C406.918 242.77 407.334 248.594 411.182 251.93L434.717 272.326L410.864 295.022C407.176 298.532 407.031 304.37 410.541 308.058C414.051 311.748 419.888 311.892 423.577 308.382L453.652 279.762C458.201 275.435 458.031 268.129 453.286 264.015L423.259 237.994Z" fill="currentColor"/><path d="M982.001 318.678C982.001 331.708 971.603 342.271 958.776 342.271C945.949 342.271 935.551 331.708 935.551 318.678C935.551 305.647 945.949 295.084 958.776 295.084C971.603 295.084 982.001 305.647 982.001 318.678Z" fill="currentColor"/></svg></span><span class="count" id="count"></span></header>
+  <main id="main" class="col"></main>
+</div>
+<script>
+const LET=["А","Б","В","Г","Д"];
+const $=id=>document.getElementById(id);
+const main=$('main');
+const PI=Math.PI;
+function shuffle(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
+function take(a,n){return shuffle(a).slice(0,n)}
+const cot=x=>Math.cos(x)/Math.sin(x);
+
+/* ---------- graph ---------- */
+function graph(fn,yr=3){
+  const W=420,H=230,x0=-2*PI,x1=2*PI,y0=-yr,y1=yr;
+  const sx=x=>(x-x0)/(x1-x0)*W, sy=y=>H-(y-y0)/(y1-y0)*H;
+  let g='';
+  for(let k=-4;k<=4;k++){const x=k*PI/2;g+=`<line x1="${sx(x)}" y1="0" x2="${sx(x)}" y2="${H}" stroke="#fff" stroke-opacity="${k%2?0.07:0.14}"/>`}
+  for(let y=Math.ceil(y0);y<=y1;y++) g+=`<line x1="0" y1="${sy(y)}" x2="${W}" y2="${sy(y)}" stroke="#fff" stroke-opacity=".08"/>`;
+  g+=`<line x1="0" y1="${sy(0)}" x2="${W}" y2="${sy(0)}" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/>`;
+  g+=`<line x1="${sx(0)}" y1="0" x2="${sx(0)}" y2="${H}" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/>`;
+  [[-2*PI,'−2π'],[-PI,'−π'],[PI,'π'],[2*PI,'2π']].forEach(([x,t])=>{g+=`<text x="${Math.min(W-14,Math.max(14,sx(x)))}" y="${sy(0)+16}" fill="#fff" fill-opacity=".75" font-size="13" text-anchor="middle">${t}</text>`});
+  [[1,'1'],[-1,'−1'],[2,'2'],[-2,'−2']].filter(([y])=>Math.abs(y)<yr).forEach(([y,t])=>{g+=`<text x="${sx(0)-6}" y="${sy(y)+4}" fill="#fff" fill-opacity=".75" font-size="12" text-anchor="end">${t}</text>`});
+  let d='',pen=false,prev=null;const N=900;
+  for(let k=0;k<=N;k++){const x=x0+(x1-x0)*k/N,y=fn(x);
+    if(!isFinite(y)||Math.abs(y)>yr*4){pen=false;prev=null;continue}
+    if(prev!==null&&Math.abs(y-prev)>yr){pen=false}
+    d+=(pen?'L':'M')+sx(x).toFixed(1)+' '+sy(Math.max(-yr*4,Math.min(yr*4,y))).toFixed(1);pen=true;prev=y}
+  return `<div class="graph"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Графік функції">
+   <defs><filter id="gl" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><clipPath id="cp"><rect width="${W}" height="${H}"/></clipPath></defs>
+   ${g}<path d="${d}" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" filter="url(#gl)" clip-path="url(#cp)"/></svg></div>`;
+}
+
+/* ---------- bank ---------- */
+const G=[
+ {fn:Math.sin,o:["y = sin x","y = cos x","y = −sin x","y = −cos x","y = tg x"],ex:"Синусоїда проходить через (0; 0) і на старті зростає. Максимум 1 — у точці π/2."},
+ {fn:Math.cos,o:["y = cos x","y = sin x","y = −cos x","y = −sin x","y = ctg x"],ex:"Косинус у нулі дорівнює 1, а графік симетричний відносно осі Oy — функція парна."},
+ {fn:Math.tan,o:["y = tg x","y = ctg x","y = −tg x","y = −ctg x","y = sin x"],ex:"Тангенс проходить через (0; 0), зростає на кожному проміжку і має асимптоти x = π/2 + πk."},
+ {fn:x=>-Math.cos(x),o:["y = −cos x","y = cos x","y = sin x","y = −sin x","y = cos x − 1"],ex:"У нулі значення −1, графік — косинусоїда, перевернута відносно осі Ox."},
+ {fn:cot,o:["y = ctg x","y = tg x","y = −ctg x","y = −tg x","y = cos x"],ex:"Котангенс спадає на кожному проміжку, а асимптоти стоять у точках x = πk, зокрема в нулі."}
+];
+const T=[
+ {fn:x=>2*Math.sin(x),o:["y = 2 sin x","y = sin 2x","y = sin x + 2","y = sin (x + 2)","y = ½ sin x"],ex:"Множник перед синусом розтягує графік по вертикалі: E(y) = [−2; 2], а період лишається 2π."},
+ {fn:x=>Math.sin(2*x),o:["y = sin 2x","y = 2 sin x","y = sin (x/2)","y = sin x + 2","y = cos 2x"],ex:"Множник при x стискає графік: період 2π/2 = π, а значення лишаються в межах [−1; 1]."},
+ {fn:x=>Math.cos(x)+1,o:["y = cos x + 1","y = cos (x + 1)","y = 2 cos x","y = cos x − 1","y = sin x + 1"],ex:"«+1» поза функцією піднімає графік на 1 вгору: E(y) = [0; 2]."}
+];
+const P=[
+ {q:"Область значень функції y = 3 sin x − 1",o:["[−4; 2]","[−3; 3]","[−1; 3]","[−2; 4]","[−4; −2]"],ex:"−1 ≤ sin x ≤ 1, тож −3 ≤ 3 sin x ≤ 3, і після «−1»: [−4; 2]."},
+ {q:"Найменший додатний період функції y = cos 3x",o:["2π/3","3π","6π","π/3","2π"],ex:"Період cos kx дорівнює 2π/|k|, тож 2π/3."},
+ {q:"Найменший додатний період функції y = tg 2x",o:["π/2","π","2π","π/4","4π"],ex:"Період тангенса — π, тож для tg kx маємо π/|k| = π/2."},
+ {q:"Яка з функцій парна?",o:["y = cos x","y = sin x","y = tg x","y = ctg x","y = x · cos x"],ex:"cos(−x) = cos x. Синус, тангенс і котангенс непарні, а x · cos x — добуток непарної й парної, тобто непарна."},
+ {q:"Область визначення функції y = tg x",o:["x ≠ π/2 + πk, k ∈ Z","x ≠ πk, k ∈ Z","усі дійсні числа","x ≠ 2πk, k ∈ Z","x ≠ π/2 + 2πk, k ∈ Z"],ex:"tg x = sin x / cos x, а cos x = 0 при x = π/2 + πk. Ці точки виключаємо."},
+ {q:"Найбільше значення функції y = 5 − 2 cos x",o:["7","5","3","2","10"],ex:"Найбільше буде, коли cos x = −1: 5 − 2 · (−1) = 7."},
+ {q:"Нулі функції y = sin x",o:["x = πk, k ∈ Z","x = π/2 + πk, k ∈ Z","x = 2πk, k ∈ Z","x = π/2 + 2πk, k ∈ Z","x = π/4 + πk, k ∈ Z"],ex:"Синус дорівнює нулю в точках 0, ±π, ±2π, … — тобто x = πk."}
+];
+const L=[
+ {title:"функція → період",items:[{e:"y = sin x",a:2},{e:"y = tg x",a:1},{e:"y = cos 4x",a:0}],legend:["π/2","π","2π","4π","π/4"],ex:"Період sin x — 2π, tg x — π, а cos 4x — 2π/4 = π/2."},
+ {title:"функція → область значень",items:[{e:"y = sin x",a:0},{e:"y = tg x",a:1},{e:"y = 2 cos x",a:2}],legend:["[−1; 1]","(−∞; +∞)","[−2; 2]","[0; 1]","[0; 2]"],ex:"sin x ∈ [−1; 1], тангенс набуває будь-яких значень, а 2 cos x ∈ [−2; 2]."}
+];
+const U=[
+ {q:"sin α > 0, cos α < 0",a:"II",ex:"Синус — це y, косинус — x. y > 0 і x < 0 — друга чверть."},
+ {q:"tg α > 0, sin α < 0",a:"III",ex:"Тангенс додатний у I і III чвертях, а синус від’ємний у III і IV. Спільна — III."},
+ {q:"cos α > 0, sin α < 0",a:"IV",ex:"x > 0 і y < 0 — четверта чверть."}
+];
+const V=[
+ {q:"sin (π/6) = ?",o:["1/2","√3/2","√2/2","1","0"],ex:"π/6 = 30°, а sin 30° = 1/2."},
+ {q:"cos π = ?",o:["−1","1","0","1/2","−1/2"],ex:"Кут π — це точка (−1; 0) на одиничному колі, тож cos π = −1."},
+ {q:"tg (π/4) = ?",o:["1","√3","√3/3","0","√2/2"],ex:"π/4 = 45°: sin і cos рівні, тож тангенс дорівнює 1."}
+];
+
+let plan=[],step=0,score=0,max=0,miss=[];
+function build(){
+  plan=[
+   ...take(G,2).map(d=>({k:'g',r:'Раунд 1 · Впізнай графік',d})),
+   ...take(T,2).map(d=>({k:'g',r:'Раунд 2 · Перетворення графіків',d})),
+   ...take(P,3).map(d=>({k:'p',r:'Раунд 3 · Властивості',d})),
+   ...take(L,1).map(d=>({k:'l',r:'Раунд 3 · Логічні пари',d})),
+   ...take(U,2).map(d=>({k:'u',r:'Раунд 4 · Одиничне коло',d})),
+   ...take(V,2).map(d=>({k:'p',r:'Раунд 4 · Табличні значення',d}))
+  ];
+  max=plan.reduce((s,p)=>s+(p.k==='l'?3:1),0);step=0;score=0;miss=[];
+}
+
+function home(){
+  $('count').textContent='';
+  main.innerHTML=`<div class="hero"><h1 class="display">Тригоно&shy;метричний квест</h1>
+   <p>Синус, косинус, тангенс і котангенс: графіки, властивості, перетворення й одиничне коло. Усе, що трапляється на НМТ.</p>
+   <svg class="wave" viewBox="0 0 400 70" preserveAspectRatio="none" aria-hidden="true"><path d="M0 35 C 50 0, 50 0, 100 35 S 150 70, 200 35 S 250 0, 300 35 S 350 70, 400 35" fill="none" stroke="#fff" stroke-width="4"/></svg></div>
+   <div class="panel"><h3>Що тебе чекає</h3><p>12 завдань у чотирьох раундах, формат як на НМТ. Після кожної відповіді — коротке пояснення, а в кінці — шпаргалка з усіма властивостями.</p></div>
+   <button class="cta" id="go">Почати квест</button>
+   <p class="note">Займе близько 4 хвилин. Завдання щоразу інші 🔁</p>`;
+  $('go').onclick=()=>{build();render()};
+}
+
+function after(h){main.insertAdjacentHTML('beforeend',h)}
+function nextBtn(){after(`<button class="cta" id="nx">${step===plan.length-1?'Мій результат':'Далі'}</button>`);$('nx').onclick=()=>{step++;render()};$('nx').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function fb(ok,ex,right,label){if(ok)score++;else miss.push(label);
+  after(`<div class="fb ${ok?'ok':'no'}"><b>${ok?'Правильно 💙':'Не цього разу. Правильно: '+right}</b>${ex}</div>`);nextBtn()}
+function choices(list,correct,ex,label){
+  const box=document.createElement('div');box.className='opts';
+  shuffle(list).forEach((o,i)=>{const b=document.createElement('button');b.className='opt';b.dataset.v=o;b.innerHTML=`<span class="l">${LET[i]}</span><span>${o}</span>`;box.appendChild(b);
+    b.onclick=()=>{if(box.classList.contains('locked'))return;box.classList.add('locked');
+      box.querySelectorAll('.opt').forEach(x=>{if(x.dataset.v===correct)x.classList.add('right')});
+      const ok=o===correct;if(!ok)b.classList.add('wrong');fb(ok,ex,correct,label)}});
+  main.appendChild(box);
+}
+
+function render(){
+  window.scrollTo({top:0});
+  if(step>=plan.length)return finish();
+  $('count').textContent=`${step+1}/${plan.length}`;
+  const {k,r,d}=plan[step];
+  main.innerHTML=`<div class="bar"><i style="width:${step/plan.length*100}%"></i></div><span class="round">${r}</span>`;
+  if(k==='g'){after(graph(d.fn,3));after(`<p class="prompt">Графік якої функції зображено?</p>`);choices(d.o,d.o[0],d.ex,d.o[0])}
+  if(k==='p'){after(`<p class="prompt">${d.q}</p>`);choices(d.o,d.o[0],d.ex,d.q)}
+  if(k==='u')circle(d);
+  if(k==='l')pairs(d);
+}
+
+function circle(d){
+  after(`<p class="prompt">У якій чверті лежить кут α, якщо ${d.q}?</p>
+   <div class="circle" id="cc">${['II','I','III','IV'].map(q=>`<button data-q="${q}" aria-label="${q} чверть">${q}</button>`).join('')}</div>`);
+  let done=false;
+  $('cc').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(done)return;done=true;
+    const ok=b.dataset.q===d.a;
+    $('cc').querySelectorAll('button').forEach(x=>{if(x.dataset.q===d.a)x.classList.add('right')});
+    if(!ok)b.classList.add('wrong');fb(ok,d.ex,d.a+' чверть','Чверть: '+d.q)});
+}
+
+function pairs(d){
+  after(`<p class="prompt">Установіть відповідність: ${d.title}</p>
+   <div class="panel legend">${d.legend.map((l,i)=>`<span><b>${LET[i]}</b>${l}</span>`).join('')}</div>
+   ${d.items.map((it,i)=>`<div class="pair"><p class="pq"><b>${i+1}</b>${it.e}</p><div class="letters" data-i="${i}">${LET.map((Lt,j)=>`<button data-j="${j}" aria-label="${i+1} — ${Lt}">${Lt}</button>`).join('')}</div></div>`).join('')}
+   <button class="cta" id="ck" disabled>Перевірити</button>`);
+  const pick=[null,null,null];let locked=false;
+  main.querySelectorAll('.letters').forEach(row=>{const i=+row.dataset.i;
+    row.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(locked)return;pick[i]=+b.dataset.j;
+      row.querySelectorAll('button').forEach(x=>x.classList.toggle('sel',x===b));$('ck').disabled=pick.includes(null)})});
+  $('ck').onclick=()=>{if(locked)return;locked=true;$('ck').remove();let got=0;
+    main.querySelectorAll('.letters').forEach(row=>{const i=+row.dataset.i,a=d.items[i].a;
+      row.querySelectorAll('button').forEach(x=>{x.classList.remove('sel');const j=+x.dataset.j;if(j===a)x.classList.add('right');else if(j===pick[i])x.classList.add('wrong')});
+      if(pick[i]===a)got++});
+    score+=got;if(got<3)miss.push('Логічні пари: '+d.title);
+    after(`<div class="fb ${got===3?'ok':'no'}"><b>${got} з 3${got===3?' 💙':''}</b>${d.ex}</div>`);nextBtn()};
+}
+
+function finish(){
+  $('count').textContent='';
+  const r=score/max;let t,d;
+  if(r>=.9){t='Повелитель одиничного кола';d='Тригонометрія тобі підкоряється. На НМТ ці завдання — твої гарантовані бали 😎'}
+  else if(r>=.7){t='На піку синусоїди';d='Майже все правильно. Глянь шпаргалку нижче, щоб закрити останні прогалини.'}
+  else if(r>=.45){t='Період зростання';d='Основа вже є, але деякі властивості плутаються. Шпаргалка нижче — саме для цього.'}
+  else{t='Тільки виходимо з нуля';d='Як синус у точці 0: далі тільки вгору. Повтори шпаргалку й пройди квест ще раз — завдання будуть нові 💪'}
+  main.innerHTML=`<div class="hero result"><p class="display big">${score}<small>/${max}</small></p><h2 class="display">${t}</h2><p>${d}</p></div>
+   <div class="panel cheat"><h3>Шпаргалка: властивості функцій</h3>
+   <table><thead><tr><th></th><th>D(y)</th><th>E(y)</th><th>Період</th><th>Парність</th><th>Нулі</th></tr></thead><tbody>
+   <tr><td>sin x</td><td>R</td><td>[−1; 1]</td><td>2π</td><td>непарна</td><td>πk</td></tr>
+   <tr><td>cos x</td><td>R</td><td>[−1; 1]</td><td>2π</td><td>парна</td><td>π/2 + πk</td></tr>
+   <tr><td>tg x</td><td>x ≠ π/2 + πk</td><td>R</td><td>π</td><td>непарна</td><td>πk</td></tr>
+   <tr><td>ctg x</td><td>x ≠ πk</td><td>R</td><td>π</td><td>непарна</td><td>π/2 + πk</td></tr>
+   </tbody></table></div>
+   <div class="panel"><h3>Перетворення y = a · sin (kx) + b</h3><p>a розтягує графік по вертикалі: E(y) = [−|a| + b; |a| + b]. k змінює період: 2π/|k| (для tg і ctg — π/|k|). b зсуває графік угору чи вниз.</p></div>
+   <button class="cta" id="again">Пройти ще раз</button>
+   <p class="note">Зроби скрін шпаргалки — знадобиться перед НМТ 📌</p>`;
+  $('again').onclick=()=>{build();render()};window.scrollTo({top:0});
+}
+home();
+</script>
+</body>
+</html>
